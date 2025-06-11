@@ -10,46 +10,65 @@ use App\Models\User;
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+{
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            $user = Auth::user()->fresh(['role']);
-            
-            if (!$user->role) {
-                \Log::error('User role not found after login', ['user_id' => $user->user_id]);
-                Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Error en la autenticación. Contacte al administrador.',
-                ])->onlyInput('email');
-            }
-            
-            $roleName = $user->role->role_name;
-            \Log::info('User logged in with role', ['role' => $roleName]);
-            
-            switch ($roleName) {
-                case 'Administrador':
-                    return redirect()->route('admin.dashboard');
-                case 'Empleado':
-                    return redirect()->route('empleado.dashboard');
-                case 'Usuario':
-                    return redirect()->route('usuario.dashboard');
-                default:
-                    \Log::error('Unknown role after login', ['role' => $roleName]);
-                    Auth::logout();
-                    return redirect()->route('login')->with('error', 'Rol no reconocido.');
-            }
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+        'role' => 'required|in:usuario,empleado,admin',
+    ]);
+
+   
+    $userCredentials = [
+        'email' => $credentials['email'],
+        'password' => $credentials['password'],
+    ];
+
+    
+    if (Auth::attempt($userCredentials)) {
+        $request->session()->regenerate();
+
+        $user = Auth::user()->load('role'); 
+
+        if (!$user->role) {
+            \Log::error('User role not found after login', ['user_id' => $user->id]);
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Error al obtener el rol del usuario.',
+            ])->onlyInput('email');
         }
 
-        return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('email');
+        $roleName = strtolower($user->role->role_name); 
+
+        
+        if ($credentials['role'] !== $roleName) {
+            Auth::logout();
+            return back()->withErrors([
+                'role' => 'El rol seleccionado no coincide con el usuario.',
+            ])->onlyInput('role');
+        }
+
+       
+        switch ($roleName) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'empleado':
+                return redirect()->route('empleado.dashboard');
+            case 'usuario':
+                return redirect()->route('usuario.dashboard');
+            default:
+                Auth::logout();
+                return back()->withErrors([
+                    'role' => 'Rol no reconocido.',
+                ]);
+        }
     }
+
+    return back()->withErrors([
+        'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+    ])->onlyInput('email');
+}
+
 
     public function register(Request $request)
     {
