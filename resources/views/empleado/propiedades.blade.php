@@ -34,7 +34,7 @@
                     <td>{{ $propiedad->precio }}</td>
                     <td>{{ $propiedad->tipo }}</td>
                     <td>
-                        <a href="{{ route('empleado.propiedades.edit', $propiedad->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{{ route('empleado.propiedades.edit', ['id' => $propiedad->id]) }}" class="btn btn-warning btn-sm">Editar</a>
                         <form action="{{ route('empleado.propiedades.destroy', $propiedad->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
