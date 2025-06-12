@@ -20,20 +20,24 @@ class CheckRole
         }
 
         $user = auth()->user();
-        
-        foreach ($roles as $role) {
-            if ($user->hasRole($role)) {
-                return $next($request);
-            }
+
+        if (!$user->role) {
+            abort(403, 'Usuario sin rol asignado.');
         }
 
-        return $this->redirectToDashboard($user);
+        if (!in_array($user->role->role_name, $roles)) {
+            
+            abort(403, 'No tenés permiso para acceder a esta sección.');
+        }
+
+        return $next($request);
     }
 
-    private function redirectToDashboard($user)
+   
+    public function redirectToDashboard($user)
     {
         $roleName = $user->role->role_name ?? '';
-        
+
         switch ($roleName) {
             case 'Administrador':
                 return redirect()->route('admin.dashboard');
