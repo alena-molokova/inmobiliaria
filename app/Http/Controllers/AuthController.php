@@ -37,15 +37,15 @@ class AuthController extends Controller
 
             $roleName = $user->role->role_name; // Mayúsculas igual que en DB
 
-            
-            if ($credentials['role'] !== $roleName) {
+            // Validar que el rol enviado coincida con el real del usuario
+            if (strtolower($credentials['role']) !== strtolower($roleName)) {
                 Auth::logout();
                 return back()->withErrors([
                     'role' => 'El rol seleccionado no coincide con el usuario.',
                 ])->onlyInput('role');
             }
 
-          
+            // Redirección según rol
             switch ($roleName) {
                 case 'Administrador':
                     return redirect()->route('admin.dashboard');
@@ -73,17 +73,11 @@ class AuthController extends Controller
             'last_name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:Usuario,Empleado,Administrador'],  // puedes agregar aquí para registro con rol dinámico
+            // NO se valida rol porque no viene del formulario
         ]);
 
-        
-        $roleMap = [
-            'Administrador' => 1,
-            'Empleado' => 2,
-            'Usuario' => 3,
-        ];
-
-        $roleId = $roleMap[$validated['role']] ?? 3; // Default a Usuario si falla
+        // Asignar role_id directamente a Usuario (3)
+        $roleId = 3;
 
         $user = User::create([
             'first_name' => $validated['first_name'],
@@ -106,17 +100,7 @@ class AuthController extends Controller
 
         \Log::info('User registered with role', ['role' => $roleName]);
 
-        switch ($roleName) {
-            case 'Administrador':
-                return redirect()->route('admin.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
-            case 'Empleado':
-                return redirect()->route('empleado.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
-            case 'Usuario':
-                return redirect()->route('usuario.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
-            default:
-                \Log::error('Unknown role after registration', ['role' => $roleName]);
-                return redirect()->route('login')->with('error', 'Rol no reconocido.');
-        }
+        return redirect()->route('usuario.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
     }
 
     public function logout(Request $request)
