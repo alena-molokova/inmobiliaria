@@ -22,13 +22,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
 
-    /**
-     * Rutas para Administradores
-     */
-    Route::middleware(['role:administrador'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['role:Administrador'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
         Route::get('/empleados', [AdminController::class, 'empleados'])->name('empleados');
@@ -38,10 +34,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/contratos', [AdminController::class, 'contratos'])->name('contratos');
     });
 
-    /**
-     * Rutas para Empleados
-     */
-    Route::middleware(['role:empleado,administrador'])->prefix('empleado')->name('empleado.')->group(function () {
+    Route::middleware(['role:Empleado,Administrador'])->prefix('empleado')->name('empleado.')->group(function () {
         Route::get('/dashboard', [EmpleadoController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/propiedades', [EmpleadoController::class, 'propiedades'])->name('propiedades');
@@ -63,10 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/contratos/{id}', [EmpleadoController::class, 'destroyContrato'])->name('contratos.destroy');
     });
 
-    /**
-     * Rutas para Usuarios Finales
-     */
-    Route::middleware(['role:usuario,empleado,administrador'])->prefix('usuario')->name('usuario.')->group(function () {
+    Route::middleware(['role:Usuario,Empleado,Administrador'])->prefix('usuario')->name('usuario.')->group(function () {
         Route::get('/dashboard', [UsuarioController::class, 'dashboard'])->name('dashboard');
         Route::get('/propiedades', [UsuarioController::class, 'propiedades'])->name('propiedades');
         Route::get('/contratos', [UsuarioController::class, 'contratos'])->name('contratos');

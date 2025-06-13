@@ -20,26 +20,35 @@
                     <ul class="navbar-nav ms-auto">
                         @auth
                             @php
-                                $roleName = strtolower(auth()->user()->role->role_name);
+                                $roleName = auth()->user()->role->role_name;
                             @endphp
+
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route($roleName . '.dashboard') }}">Dashboard</a>
+                                @if ($roleName === 'Administrador')
+                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                @elseif ($roleName === 'Empleado')
+                                    <a class="nav-link" href="{{ route('empleado.dashboard') }}">Dashboard</a>
+                                @elseif ($roleName === 'Usuario')
+                                    <a class="nav-link" href="{{ route('usuario.dashboard') }}">Dashboard</a>
+                                @endif
                             </li>
-                            @if (auth()->user()->role->role_name === 'Administrador')
+
+                            @if ($roleName === 'Administrador')
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.usuarios') }}">Usuarios</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.empleados') }}">Empleados</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.reportes') }}">Reportes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.propiedades') }}">Propiedades</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.clientes') }}">Clientes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.contratos') }}">Contratos</a></li>
-                            @elseif (auth()->user()->role->role_name === 'Empleado')
+                            @elseif ($roleName === 'Empleado')
                                 <li class="nav-item"><a class="nav-link" href="{{ route('empleado.propiedades') }}">Propiedades</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('empleado.clientes') }}">Clientes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('empleado.contratos') }}">Contratos</a></li>
-                            @elseif (auth()->user()->role->role_name === 'Usuario')
+                            @elseif ($roleName === 'Usuario')
                                 <li class="nav-item"><a class="nav-link" href="{{ route('usuario.propiedades') }}">Propiedades</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('usuario.contratos') }}">Contratos</a></li>
                             @endif
+
                             <li class="nav-item">
                                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                     @csrf
@@ -64,7 +73,7 @@
         <p>Inmobiliaria Tu Sueño<br>
         📍 Av. 9 de Julio, Buenos Aires<br>
         📞 (2284) 314888<br>
-        ✉️ <a href="mailto:[email protected]">[email protected]</a></p>
+        ✉️ <a href="mailto:[email protected]">[email protected]</a></p>
         <p>© 2025 Inmobiliaria Tu Sueño — Todos los derechos reservados.</p>
     </footer>
 
