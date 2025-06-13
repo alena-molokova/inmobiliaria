@@ -17,7 +17,14 @@
                 <input type="text" name="city" class="form-control" placeholder="Ciudad" required>
             </div>
             <div class="col-md-2">
-                <input type="text" name="property_type" class="form-control" placeholder="Tipo" required>
+                <select name="property_type" class="form-control" required>
+                    <option value="">-- Tipo --</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Apartamento">Apartamento</option>
+                    <option value="Terreno">Terreno</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Dúplex">Dúplex</option>
+                </select>
             </div>
             <div class="col-md-2">
                 <input type="number" name="price" class="form-control" placeholder="Precio" required>
