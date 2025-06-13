@@ -63,7 +63,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Middleware\RateLimiter::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // 👇 Tu middleware personalizado (agregalo si lo creaste)
         'role' => \App\Http\Middleware\CheckRole::class,
     ];
 }

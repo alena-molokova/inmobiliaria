@@ -35,9 +35,8 @@ class AuthController extends Controller
                 ])->onlyInput('email');
             }
 
-            $roleName = $user->role->role_name; // Mayúsculas igual que en DB
+            $roleName = $user->role->role_name; 
 
-            // Validar que el rol enviado coincida con el real del usuario
             if (strtolower($credentials['role']) !== strtolower($roleName)) {
                 Auth::logout();
                 return back()->withErrors([
@@ -45,7 +44,6 @@ class AuthController extends Controller
                 ])->onlyInput('role');
             }
 
-            // Redirección según rol
             switch ($roleName) {
                 case 'Administrador':
                     return redirect()->route('admin.dashboard');
@@ -66,43 +64,42 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            // NO se valida rol porque no viene del formulario
-        ]);
+   public function register(Request $request)
+{
+    $validated = $request->validate([
+        'first_name' => ['required', 'string', 'max:50'],
+        'last_name' => ['required', 'string', 'max:50'],
+        'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+    ]);
 
-        // Asignar role_id directamente a Usuario (3)
-        $roleId = 3;
+    $roleId = 1;
 
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role_id' => $roleId,
-        ]);
+    $user = User::create([
+        'first_name' => $validated['first_name'],
+        'last_name' => $validated['last_name'],
+        'email' => $validated['email'],
+        'password' => Hash::make($validated['password']),
+        'role_id' => $roleId,
+    ]);
 
-        Auth::login($user);
+    Auth::login($user);
 
-        $user = Auth::user()->fresh(['role']);
+    $user = Auth::user()->fresh(['role']);
 
-        if (!$user->role) {
-            \Log::error('User role not found after registration', ['user_id' => $user->user_id]);
-            return redirect()->route('login')->with('error', 'Error en el registro. Intente nuevamente.');
-        }
-
-        $roleName = $user->role->role_name;
-
-        \Log::info('User registered with role', ['role' => $roleName]);
-
-        return redirect()->route('usuario.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
+    if (!$user->role) {
+        \Log::error('User role not found after registration', ['user_id' => $user->id]);
+        return redirect()->route('login')->with('error', 'Error en el registro. Intente nuevamente.');
     }
 
+    if (strtolower($user->role->role_name) !== 'usuario') {
+        \Log::warning('Registro con rol distinto a usuario', ['user_id' => $user->id, 'role' => $user->role->role_name]);
+        Auth::logout();
+        return redirect()->route('login')->with('error', 'No tienes permiso para acceder.');
+    }
+
+    return redirect()->route('usuario.dashboard')->with('success', '¡Registro exitoso! Bienvenido.');
+}
     public function logout(Request $request)
     {
         Auth::logout();

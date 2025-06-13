@@ -22,13 +22,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
 
     /**
      * Rutas para Administradores
      */
-    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['role:administrador'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
         Route::get('/empleados', [AdminController::class, 'empleados'])->name('empleados');
@@ -41,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
     /**
      * Rutas para Empleados
      */
-    Route::middleware(['role:empleado,admin'])->prefix('empleado')->name('empleado.')->group(function () {
+    Route::middleware(['role:empleado,administrador'])->prefix('empleado')->name('empleado.')->group(function () {
         Route::get('/dashboard', [EmpleadoController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/propiedades', [EmpleadoController::class, 'propiedades'])->name('propiedades');
@@ -66,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     /**
      * Rutas para Usuarios Finales
      */
-    Route::middleware(['role:usuario,empleado,admin'])->prefix('usuario')->name('usuario.')->group(function () {
+    Route::middleware(['role:usuario,empleado,administrador'])->prefix('usuario')->name('usuario.')->group(function () {
         Route::get('/dashboard', [UsuarioController::class, 'dashboard'])->name('dashboard');
         Route::get('/propiedades', [UsuarioController::class, 'propiedades'])->name('propiedades');
         Route::get('/contratos', [UsuarioController::class, 'contratos'])->name('contratos');
