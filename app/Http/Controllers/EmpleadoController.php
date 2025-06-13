@@ -23,18 +23,23 @@ class EmpleadoController extends Controller
         return view('empleado.propiedades', compact('propiedades'));
     }
 
-    public function storePropiedad(Request $request)
-    {
-        $request->validate([
-            'address' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'property_type' => 'required|string|max:100',
-        ]);
+   public function storePropiedad(Request $request)
+{
+    $validated = $request->validate([
+        'address' => 'required|string|max:255',
+        'city' => 'required|string|max:100',
+        'property_type' => 'required|string|max:100',
+        'price' => 'required|numeric',
+        'description' => 'nullable|string',
+        'status' => 'nullable|string',
+    ]);
 
-        Propiedad::create($request->only(['address', 'price', 'property_type']));
+    $validated['employee_id'] = auth()->id(); // Asignás el empleado logueado
 
-        return redirect()->route('empleado.propiedades')->with('success', 'Propiedad creada.');
-    }
+    Propiedad::create($validated);
+
+    return redirect()->route('empleado.propiedades')->with('success', 'Propiedad creada correctamente.');
+}
 
     public function editPropiedad($id)
     {
