@@ -15,13 +15,34 @@ class UsuarioController extends Controller
 
     public function contratos()
     {
-        $contratos = Contrato::where('user_id', auth()->id())->get();
+        $contratos = Contrato::with(['propiedad', 'cliente'])
+            ->where('user_id', auth()->id())
+            ->get();
+        
         return view('usuario.contratos', compact('contratos'));
     }
 
-    public function propiedades()
+    public function propiedades(Request $request)
     {
-        $propiedades = Propiedad::all(); 
-        return view('usuario.propiedades', compact('propiedades'));
+        $query = Propiedad::disponible();
+
+        if ($request->filled('city')) {
+            $query->byCity($request->city);
+        }
+
+        if ($request->filled('property_type')) {
+            $query->byType($request->property_type);
+        }
+
+        if ($request->filled('price_min') || $request->filled('price_max')) {
+            $query->byPriceRange($request->price_min, $request->price_max);
+        }
+
+        $propiedades = $query->orderBy('created_at', 'desc')->paginate(12);
+
+        $cities = Propiedad::distinct()->pluck('city')->sort();
+        $propertyTypes = ['Casa', 'Apartamento', 'Terreno', 'Comercial', 'Dúplex'];
+
+        return view('usuario.propiedades', compact('propiedades', 'cities', 'propertyTypes'));
     }
 }

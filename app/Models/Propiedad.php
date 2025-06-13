@@ -27,4 +27,30 @@ class Propiedad extends Model
     {
         return $this->hasMany(Contrato::class, 'property_id', 'property_id');
     }
+
+    public function scopeDisponible($query)
+    {
+        return $query->where('status', 'Disponible');
+    }
+
+    public function scopeByCity($query, $city)
+    {
+        return $query->where('city', 'like', '%' . $city . '%');
+    }
+
+    public function scopeByType($query, $type)
+    {
+        return $query->where('property_type', $type);
+    }
+
+    public function scopeByPriceRange($query, $min = null, $max = null)
+    {
+    if ($min) {
+        $query->where('price', '>=', $min);
+    }
+    if ($max) {
+        $query->where('price', '<=', $max);
+    }
+    return $query;
+}
 }
