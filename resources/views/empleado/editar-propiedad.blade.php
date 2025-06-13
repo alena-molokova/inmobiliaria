@@ -1,32 +1,41 @@
-@extends('layouts.app')
+<form method="POST" action="{{ route('empleado.propiedades.update', $propiedad->property_id) }}">
+    @csrf
+    @method('PUT')
 
-@section('title', 'Editar Propiedad')
+    <div class="mb-3">
+        <label>Dirección</label>
+        <input type="text" name="address" class="form-control" value="{{ $propiedad->address }}" required>
+    </div>
 
-@section('content')
-<div class="container mt-5">
-    <h2>Editar Propiedad</h2>
+    <div class="mb-3">
+        <label>Ciudad</label>
+        <input type="text" name="city" class="form-control" value="{{ $propiedad->city }}" required>
+    </div>
 
-    <form method="POST" action="{{ route('empleado.propiedades.update', $propiedad->id) }}">
-        @csrf
-        @method('PUT')
+    <div class="mb-3">
+        <label>Tipo</label>
+        <input type="text" name="property_type" class="form-control" value="{{ $propiedad->property_type }}" required>
+    </div>
 
-        <div class="mb-3">
-            <label>Dirección</label>
-            <input type="text" name="direccion" class="form-control" value="{{ $propiedad->direccion }}" required>
-        </div>
+    <div class="mb-3">
+        <label>Precio</label>
+        <input type="number" name="price" class="form-control" value="{{ $propiedad->price }}" required>
+    </div>
 
-        <div class="mb-3">
-            <label>Precio</label>
-            <input type="text" name="precio" class="form-control" value="{{ $propiedad->precio }}" required>
-        </div>
+    <div class="mb-3">
+        <label>Descripción</label>
+        <textarea name="description" class="form-control">{{ $propiedad->description }}</textarea>
+    </div>
 
-        <div class="mb-3">
-            <label>Tipo</label>
-            <input type="text" name="tipo" class="form-control" value="{{ $propiedad->tipo }}" required>
-        </div>
+    <div class="mb-3">
+        <label>Estado</label>
+        <select name="status" class="form-control">
+            <option value="disponible" {{ $propiedad->status == 'disponible' ? 'selected' : '' }}>Disponible</option>
+            <option value="vendido" {{ $propiedad->status == 'vendido' ? 'selected' : '' }}>Vendido</option>
+            <option value="alquilado" {{ $propiedad->status == 'alquilado' ? 'selected' : '' }}>Alquilado</option>
+        </select>
+    </div>
 
-        <button class="btn btn-primary">Actualizar</button>
-        <a href="{{ route('empleado.propiedades') }}" class="btn btn-secondary">Volver</a>
-    </form>
-</div>
-@endsection
+    <button class="btn btn-primary">Actualizar</button>
+    <a href="{{ route('empleado.propiedades') }}" class="btn btn-secondary">Volver</a>
+</form>
