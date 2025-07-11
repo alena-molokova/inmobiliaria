@@ -6,7 +6,15 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    /**
+     * Los *middleware* globales HTTP de la aplicación.
+     *
+     * Estos *middleware* se ejecutan durante cada solicitud al sistema.
+     *
+     * @var array<int, class-string|string>
+     */
     protected $middleware = [
+    
         \Illuminate\Http\Middleware\TrustHosts::class,
         \Illuminate\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
@@ -16,13 +24,18 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
+    /**
+     * Los grupos de *middleware* de ruta de la aplicación.
+     *
+     * @var array<string, array<int, class-string|string>>
+     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class, // 🔒 Necesario para formularios
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -32,6 +45,13 @@ class Kernel extends HttpKernel
         ],
     ];
 
+    /**
+     * Los *middleware* individuales de la aplicación.
+     *
+     * Estos se pueden asignar a rutas individualmente.
+     *
+     * @var array<string, class-string|string>
+     */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
@@ -42,6 +62,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Middleware\RateLimiter::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        
         'role' => \App\Http\Middleware\CheckRole::class,
     ];
 }

@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between">
-                    <a href="{{ route('empleado.propiedades') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    <a href="{{ route('empleado.propiedades.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary fw-semibold px-4">Actualizar</button>
                 </div>
             </form>

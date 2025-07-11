@@ -1,62 +1,85 @@
 @extends('layouts.app')
 
-@section('title', 'Gestión de Empleados')
+@section('title', 'Gestión de Empleados - Administrador')
 
 @section('content')
-<div class="container mt-5">
-    <h2 class="mb-4">Gestión de Empleados</h2>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-users text-danger"></i>
+                        Gestión de Empleados - Administrador
+                    </h4>
+                    <a href="{{ route('admin.empleados.create') }}" class="btn btn-danger">
+                        <i class="fas fa-plus"></i> Nuevo Empleado
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-primary">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Rol</th>
+                                    <th>Fecha Registro</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($empleados as $empleado)
+                                @forelse($empleados as $empleado)
                 <tr>
-                    <td>{{ $empleado->id }}</td>
-                    <td>{{ $empleado->name }}</td>
+                                        <td>{{ $empleado->user_id }}</td>
+                                        <td>{{ $empleado->first_name }} {{ $empleado->last_name }}</td>
                     <td>{{ $empleado->email }}</td>
-                    <td>{{ $empleado->role->role_name }}</td>
-                    <td>
-                        <a href="{{ route('admin.empleados.edit', $empleado->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                        <form action="{{ route('admin.empleados.destroy', $empleado->id) }}" method="POST" class="d-inline">
+                                        <td>
+                                            <span class="badge bg-{{ $empleado->role->role_name == 'Administrador' ? 'danger' : 'info' }}">
+                                                {{ $empleado->role->role_name }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $empleado->created_at->format('d/m/Y H:i') }}</td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.empleados.edit', $empleado->user_id) }}" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form action="{{ route('admin.empleados.destroy', $empleado->user_id) }}" 
+                                                      method="POST" class="d-inline"
+                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar este empleado?')">Eliminar</button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                         </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            <i class="fas fa-info-circle"></i>
+                                            No hay empleados registrados
                     </td>
                 </tr>
-            @endforeach
+                                @endforelse
         </tbody>
     </table>
-
-    <div class="mt-4">
-        <h4>Agregar Nuevo Empleado</h4>
-        <form action="{{ route('admin.empleados.store') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input name="name" type="text" class="form-control" placeholder="Nombre del empleado">
+                    </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input name="email" type="email" class="form-control" placeholder="Correo electrónico">
             </div>
-            <div class="mb-3">
-                <label class="form-label">Rol</label>
-                <select name="role" class="form-select">
-                    <option value="Empleado">Empleado</option>
-                    <option value="Administrador">Administrador</option>
-                </select>
             </div>
-            <button type="submit" class="btn btn-primary">Agregar</button>
-        </form>
     </div>
 </div>
 @endsection

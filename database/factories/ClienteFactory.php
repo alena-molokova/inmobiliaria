@@ -19,4 +19,32 @@ class ClienteFactory extends Factory
             'address'    => $this->faker->address,
         ];
     }
+
+    /**
+     * Создает клиента с испанскими именами
+     */
+    public function espanol()
+    {
+        return $this->state(function (array $attributes) {
+            $nombres = ['Carlos', 'María', 'José', 'Ana', 'Luis', 'Carmen', 'Miguel', 'Isabel', 'Juan', 'Rosa'];
+            $apellidos = ['García', 'Rodríguez', 'González', 'Fernández', 'López', 'Martínez', 'Sánchez', 'Pérez', 'Gómez', 'Martin'];
+            
+            return [
+                'first_name' => $this->faker->randomElement($nombres),
+                'last_name' => $this->faker->randomElement($apellidos),
+            ];
+        });
+    }
+
+    /**
+     * Создает клиента с конкретным городом
+     */
+    public function enCiudad($ciudad)
+    {
+        return $this->state(function (array $attributes) use ($ciudad) {
+            return [
+                'address' => $this->faker->streetAddress . ', ' . $ciudad,
+            ];
+        });
+    }
 }

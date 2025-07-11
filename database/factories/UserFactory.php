@@ -22,4 +22,40 @@ class UserFactory extends Factory
             'role_id' => Role::inRandomOrder()->first()?->role_id ?? 1
         ];
     }
+
+    /**
+     * Создает пользователя с ролью администратора
+     */
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => Role::where('role_name', 'Administrador')->first()?->role_id ?? 1,
+            ];
+        });
+    }
+
+    /**
+     * Создает пользователя с ролью сотрудника
+     */
+    public function empleado()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => Role::where('role_name', 'Empleado')->first()?->role_id ?? 2,
+            ];
+        });
+    }
+
+    /**
+     * Создает пользователя с ролью обычного пользователя
+     */
+    public function usuario()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => Role::where('role_name', 'Usuario')->first()?->role_id ?? 3,
+            ];
+        });
+    }
 }

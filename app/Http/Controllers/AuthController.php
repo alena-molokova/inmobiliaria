@@ -14,15 +14,32 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
-            'role' => 'required|in:Usuario,Empleado,Administrador',
         ]);
 
-        $userCredentials = [
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-        ];
+        // Проверка на брутфорс атаку
+        $email = $credentials['email'];
+        $key = 'login_attempts_' . md5($email);
+        $attempts = cache()->get($key, 0);
+        
+        if ($attempts >= 5) {
+            $lockoutTime = cache()->get($key . '_lockout', 0);
+            if (time() < $lockoutTime) {
+                $remainingTime = $lockoutTime - time();
+                return back()->withErrors([
+                    'email' => "Demasiados intentos fallidos. Intenta nuevamente en {$remainingTime} segundos.",
+                ])->onlyInput('email');
+            } else {
+                // Сброс блокировки
+                cache()->forget($key);
+                cache()->forget($key . '_lockout');
+            }
+        }
 
-        if (Auth::attempt($userCredentials)) {
+        if (Auth::attempt($credentials)) {
+            // Сброс счетчика попыток при успешном входе
+            cache()->forget($key);
+            cache()->forget($key . '_lockout');
+            
             $request->session()->regenerate();
 
             $user = Auth::user()->load('role');
@@ -35,14 +52,7 @@ class AuthController extends Controller
                 ])->onlyInput('email');
             }
 
-            $roleName = $user->role->role_name; 
-
-            if ($credentials['role'] !== $roleName) {
-                Auth::logout();
-                return back()->withErrors([
-                    'role' => 'El rol seleccionado no coincide con el usuario.',
-                ])->onlyInput('email', 'role');
-            }
+            $roleName = $user->role->role_name;
 
             switch ($roleName) {
                 case 'Administrador':
@@ -54,31 +64,45 @@ class AuthController extends Controller
                 default:
                     Auth::logout();
                     return back()->withErrors([
-                        'role' => 'Rol no reconocido.',
+                        'email' => 'Rol no reconocido.',
                     ]);
             }
         }
 
+        // Увеличение счетчика неудачных попыток
+        $attempts++;
+        cache()->put($key, $attempts, 300); // 5 минут
+        
+        if ($attempts >= 5) {
+            $lockoutTime = time() + 300; // 5 минут блокировки
+            cache()->put($key . '_lockout', $lockoutTime, 300);
+        }
+
         return back()->withErrors([
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('email', 'role');
+        ])->onlyInput('email');
     }
 
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name' => ['required', 'string', 'max:50'],
+            'first_name' => ['required', 'string', 'max:50', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+            'last_name' => ['required', 'string', 'max:50', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/'],
+        ], [
+            'first_name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'last_name.regex' => 'El apellido solo puede contener letras y espacios.',
+            'email.unique' => 'Este email ya está registrado.',
+            'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una mayúscula y un número.',
         ]);
 
         $roleId = 1;
 
         $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
+            'first_name' => trim($validated['first_name']),
+            'last_name' => trim($validated['last_name']),
+            'email' => strtolower(trim($validated['email'])),
             'password' => Hash::make($validated['password']),
             'role_id' => $roleId,
         ]);

@@ -45,12 +45,12 @@ class Propiedad extends Model
 
     public function scopeByPriceRange($query, $min = null, $max = null)
     {
-    if ($min) {
-        $query->where('price', '>=', $min);
+        if ($min) {
+            $query->where('price', '>=', $min);
+        }
+        if ($max) {
+            $query->where('price', '<=', $max);
+        }
+        return $query;
     }
-    if ($max) {
-        $query->where('price', '<=', $max);
-    }
-    return $query;
-}
 }
