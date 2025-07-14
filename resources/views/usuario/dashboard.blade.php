@@ -5,7 +5,7 @@
 @section('content')
 <main class="flex-grow-1">
 <div class="container mt-5">
-  <h2 class="mb-4">Bienvenido, {{ auth()->user()->name }}</h2>
+  <h2 class="mb-4">Bienvenido, {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h2>
   <p>Estas son algunas propiedades que podrían interesarte:</p>
 
   <div class="row g-4 mb-5">

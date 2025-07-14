@@ -16,7 +16,8 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Проверка на брутфорс атаку
+        // Проверка на брутфорс атаку (временно отключена для отладки)
+        /*
         $email = $credentials['email'];
         $key = 'login_attempts_' . md5($email);
         $attempts = cache()->get($key, 0);
@@ -34,11 +35,12 @@ class AuthController extends Controller
                 cache()->forget($key . '_lockout');
             }
         }
+        */
 
         if (Auth::attempt($credentials)) {
-            // Сброс счетчика попыток при успешном входе
-            cache()->forget($key);
-            cache()->forget($key . '_lockout');
+            // Сброс счетчика попыток при успешном входе (временно отключено)
+            // cache()->forget($key);
+            // cache()->forget($key . '_lockout');
             
             $request->session()->regenerate();
 
@@ -53,6 +55,14 @@ class AuthController extends Controller
             }
 
             $roleName = $user->role->role_name;
+            
+            // Log para debugging
+            \Log::info('Login attempt', [
+                'user_id' => $user->user_id,
+                'email' => $user->email,
+                'role_id' => $user->role_id,
+                'role_name' => $roleName
+            ]);
 
             switch ($roleName) {
                 case 'Administrador':
@@ -64,12 +74,13 @@ class AuthController extends Controller
                 default:
                     Auth::logout();
                     return back()->withErrors([
-                        'email' => 'Rol no reconocido.',
+                        'email' => 'Rol no reconocido: ' . $roleName,
                     ]);
             }
         }
 
-        // Увеличение счетчика неудачных попыток
+        // Увеличение счетчика неудачных попыток (временно отключено)
+        /*
         $attempts++;
         cache()->put($key, $attempts, 300); // 5 минут
         
@@ -77,6 +88,7 @@ class AuthController extends Controller
             $lockoutTime = time() + 300; // 5 минут блокировки
             cache()->put($key . '_lockout', $lockoutTime, 300);
         }
+        */
 
         return back()->withErrors([
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',

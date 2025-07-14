@@ -7,23 +7,25 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\EmpleadoUsuarioController; // <-- Asegurate de tener esto
 
-Route::get('/', function () {
-    return view('auth.login');
-})->name('home');
+Route::middleware(['web'])->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    })->name('home');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
 
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
 
     // Rutas para administrador
     Route::middleware(['role:Administrador'])->prefix('admin')->name('admin.')->group(function () {

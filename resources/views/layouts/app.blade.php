@@ -41,9 +41,9 @@
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.clientes') }}">Clientes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.contratos') }}">Contratos</a></li>
                             @elseif ($roleName === 'Empleado')
-                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.propiedades') }}">Propiedades</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.clientes') }}">Clientes</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.contratos') }}">Contratos</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.propiedades.index') }}">Propiedades</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.clientes.index') }}">Clientes</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('empleado.contratos.index') }}">Contratos</a></li>
                             @elseif ($roleName === 'Usuario')
                                 <li class="nav-item"><a class="nav-link" href="{{ route('usuario.propiedades') }}">Propiedades</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('usuario.contratos') }}">Contratos</a></li>

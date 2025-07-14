@@ -144,7 +144,7 @@
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
                             <strong>Nota:</strong> Este contrato fue creado por el empleado 
-                            <strong>{{ auth()->user()->name }}</strong> el {{ $contrato->created_at->format('d/m/Y a las H:i') }}.
+                            <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong> el {{ $contrato->created_at->format('d/m/Y a las H:i') }}.
                         </div>
                     </div>
                 </div>

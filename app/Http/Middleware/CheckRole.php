@@ -19,14 +19,20 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        $user = auth()->user();
+        $user = auth()->user()->load('role');
 
         if (!$user->role) {
+            \Log::error('User without role', ['user_id' => $user->user_id]);
             abort(403, 'Usuario sin rol asignado.');
         }
 
         if (!in_array($user->role->role_name, $roles)) {
-            
+            \Log::warning('Unauthorized access attempt', [
+                'user_id' => $user->user_id,
+                'user_role' => $user->role->role_name,
+                'required_roles' => $roles,
+                'url' => $request->url()
+            ]);
             abort(403, 'No tenés permiso para acceder a esta sección.');
         }
 

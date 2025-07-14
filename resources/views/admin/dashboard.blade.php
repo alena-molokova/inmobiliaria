@@ -6,7 +6,7 @@
 @section('content')
 <main class="container mt-4">
     <section class="mb-4">
-        <h2>Bienvenido, {{ auth()->user()->name }}</h2>
+        <h2>Bienvenido, {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h2>
     </section>
 
     <section class="row g-4">

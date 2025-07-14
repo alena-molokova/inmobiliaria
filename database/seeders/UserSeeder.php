@@ -15,6 +15,9 @@ class UserSeeder extends Seeder
         $this->createRoles();
 
         // Создаем администраторов
+        $adminRole = Role::where('role_name', 'Administrador')->first();
+        echo "🔍 Role Administrador ID: " . ($adminRole ? $adminRole->role_id : 'NO ENCONTRADO') . "\n";
+        
         User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
@@ -22,11 +25,14 @@ class UserSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Principal',
                 'phone' => '123456789',
-                'role_id' => Role::where('role_name', 'Administrador')->first()?->role_id ?? 1,
+                'role_id' => $adminRole ? $adminRole->role_id : 3,
             ]
         );
 
         // Создаем сотрудника
+        $empleadoRole = Role::where('role_name', 'Empleado')->first();
+        echo "🔍 Role Empleado ID: " . ($empleadoRole ? $empleadoRole->role_id : 'NO ENCONTRADO') . "\n";
+        
         User::firstOrCreate(
             ['email' => 'empleado@gmail.com'],
             [
@@ -34,11 +40,14 @@ class UserSeeder extends Seeder
                 'first_name' => 'Empleado',
                 'last_name' => 'General',
                 'phone' => '987654321',
-                'role_id' => Role::where('role_name', 'Empleado')->first()?->role_id ?? 2,
+                'role_id' => $empleadoRole ? $empleadoRole->role_id : 2,
             ]
         );
 
         // Создаем обычного пользователя
+        $usuarioRole = Role::where('role_name', 'Usuario')->first();
+        echo "🔍 Role Usuario ID: " . ($usuarioRole ? $usuarioRole->role_id : 'NO ENCONTRADO') . "\n";
+        
         User::firstOrCreate(
             ['email' => 'usuario@gmail.com'],
             [
@@ -46,7 +55,7 @@ class UserSeeder extends Seeder
                 'first_name' => 'Usuario',
                 'last_name' => 'Regular',
                 'phone' => '555555555',
-                'role_id' => Role::where('role_name', 'Usuario')->first()?->role_id ?? 3,
+                'role_id' => $usuarioRole ? $usuarioRole->role_id : 1,
             ]
         );
 
@@ -56,6 +65,9 @@ class UserSeeder extends Seeder
 
     private function createRoles()
     {
+        // Limpiar roles existentes para evitar conflictos
+        Role::truncate();
+        
         $roles = [
             ['role_name' => 'Usuario'],
             ['role_name' => 'Empleado'],
@@ -63,8 +75,10 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::firstOrCreate($role);
+            Role::create($role);
         }
+        
+        echo "✅ Roles creados: " . Role::count() . "\n";
     }
 
     private function createAdditionalUsers()
