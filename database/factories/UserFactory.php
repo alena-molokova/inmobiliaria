@@ -13,9 +13,21 @@ class UserFactory extends Factory
 
     public function definition()
     {
+        // Аргентинские имена
+        $nombres = [
+            'Santiago', 'Mateo', 'Benjamín', 'Lucas', 'Joaquín', 'Pedro', 'Tomás', 'Agustín', 'Francisco', 'Juan',
+            'Sofía', 'Valentina', 'Isabella', 'Emma', 'Olivia', 'Camila', 'Lucía', 'Victoria', 'Martina', 'Julia'
+        ];
+        
+        // Аргентинские фамилии
+        $apellidos = [
+            'González', 'Rodríguez', 'Gómez', 'Fernández', 'López', 'Díaz', 'Martínez', 'Pérez', 'García', 'Sánchez',
+            'Romero', 'Sosa', 'Torres', 'Álvarez', 'Ruiz', 'Ramírez', 'Flores', 'Acosta', 'Benítez', 'Silva'
+        ];
+
         return [
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
+            'first_name' => $this->faker->randomElement($nombres),
+            'last_name' => $this->faker->randomElement($apellidos),
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
             'password' => bcrypt('password'),

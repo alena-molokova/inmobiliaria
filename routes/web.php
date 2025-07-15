@@ -30,11 +30,17 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Rutas para administrador
     Route::middleware(['role:Administrador'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('usuarios');
+        Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('usuarios.index');
+        Route::get('/usuarios/create', [AdminController::class, 'createUsuario'])->name('usuarios.create');
+        Route::post('/usuarios', [AdminController::class, 'storeUsuario'])->name('usuarios.store');
+        Route::get('/usuarios/{id}/edit', [AdminController::class, 'editUsuario'])->name('usuarios.edit');
+        Route::put('/usuarios/{id}', [AdminController::class, 'updateUsuario'])->name('usuarios.update');
+        Route::delete('/usuarios/{id}', [AdminController::class, 'destroyUsuario'])->name('usuarios.destroy');
         Route::get('/empleados', [AdminController::class, 'empleados'])->name('empleados.index');
         Route::get('/empleados/create', [AdminController::class, 'createEmpleado'])->name('empleados.create');
         Route::post('/empleados', [AdminController::class, 'storeEmpleado'])->name('empleados.store');
         Route::get('/empleados/{id}/edit', [AdminController::class, 'editEmpleado'])->name('empleados.edit');
+        Route::get('/empleados/{id}', [AdminController::class, 'showEmpleado'])->name('empleados.show');
         Route::put('/empleados/{id}', [AdminController::class, 'updateEmpleado'])->name('empleados.update');
         Route::delete('/empleados/{id}', [AdminController::class, 'destroyEmpleado'])->name('empleados.destroy');
         Route::get('/reportes', [AdminController::class, 'reportes'])->name('reportes');

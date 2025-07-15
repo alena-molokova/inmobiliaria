@@ -63,7 +63,7 @@ class PropiedadSeeder extends Seeder
             ->create();
 
         // Создаем недвижимость в разных городах
-        $ciudades = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao', 'Málaga'];
+        $ciudades = ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata', 'Mar del Plata'];
         foreach ($ciudades as $ciudad) {
             Propiedad::factory()
                 ->count(5)

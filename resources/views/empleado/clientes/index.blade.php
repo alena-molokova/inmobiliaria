@@ -48,23 +48,8 @@
                                         <td>{{ $cliente->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('empleado.clientes.show', $cliente->client_id) }}" 
-                                                   class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('empleado.clientes.edit', $cliente->client_id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('empleado.clientes.destroy', $cliente->client_id) }}" 
-                                                      method="POST" class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar este cliente?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <a href="{{ route('empleado.clientes.show', $cliente->client_id) }}" class="btn btn-sm btn-outline-info">Ver</a>
+                                                <a href="{{ route('empleado.clientes.edit', $cliente->client_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
                                             </div>
                                         </td>
                                     </tr>

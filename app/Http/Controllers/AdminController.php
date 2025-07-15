@@ -69,6 +69,12 @@ class AdminController extends Controller
         return view('admin.empleados.edit', compact('empleado', 'roles'));
     }
 
+    public function showEmpleado($id)
+    {
+        $empleado = User::with('role')->findOrFail($id);
+        return view('admin.empleados.show', compact('empleado'));
+    }
+
     public function updateEmpleado(Request $request, $id)
     {
         $validated = $request->validate([
@@ -364,5 +370,77 @@ class AdminController extends Controller
         $contrato->delete();
 
         return redirect()->route('admin.contratos.index')->with('success', 'Contrato eliminado correctamente.');
+    }
+
+    // ==================== CRUD USUARIOS ====================
+
+    public function createUsuario()
+    {
+        return view('admin.usuarios.create');
+    }
+
+    public function storeUsuario(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+            'last_name' => 'required|string|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+            'email' => 'required|email|max:100|unique:users,email',
+            'password' => 'required|string|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/',
+            'phone' => 'nullable|string|max:20',
+        ], [
+            'first_name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'last_name.regex' => 'El apellido solo puede contener letras y espacios.',
+            'email.unique' => 'Este email ya está registrado.',
+            'password.regex' => 'La contraseña debe contener al menos una letra minúscula, una mayúscula y un número.',
+        ]);
+
+        $user = User::create([
+            'first_name' => trim($validated['first_name']),
+            'last_name' => trim($validated['last_name']),
+            'email' => strtolower(trim($validated['email'])),
+            'password' => Hash::make($validated['password']),
+            'phone' => $validated['phone'] ?? null,
+            'role_id' => 1, // Usuario
+        ]);
+
+        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario creado correctamente.');
+    }
+
+    public function editUsuario($id)
+    {
+        $usuario = User::findOrFail($id);
+        return view('admin.usuarios.edit', compact('usuario'));
+    }
+
+    public function updateUsuario(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+            'last_name' => 'required|string|max:50|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+            'email' => 'required|email|max:100|unique:users,email,' . $id . ',user_id',
+            'phone' => 'nullable|string|max:20',
+        ], [
+            'first_name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'last_name.regex' => 'El apellido solo puede contener letras y espacios.',
+            'email.unique' => 'Este email ya está registrado.',
+        ]);
+
+        $usuario = User::findOrFail($id);
+        $usuario->update([
+            'first_name' => trim($validated['first_name']),
+            'last_name' => trim($validated['last_name']),
+            'email' => strtolower(trim($validated['email'])),
+            'phone' => $validated['phone'] ?? null,
+        ]);
+
+        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario actualizado correctamente.');
+    }
+
+    public function destroyUsuario($id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->delete();
+
+        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario eliminado correctamente.');
     }
 }

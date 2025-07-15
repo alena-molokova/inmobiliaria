@@ -12,14 +12,14 @@ class ClienteSeeder extends Seeder
         // Создаем 30 обычных клиентов
         Cliente::factory()->count(30)->create();
 
-        // Создаем 10 клиентов с испанскими именами
+        // Создаем 10 клиентов с аргентинскими именами
         Cliente::factory()
             ->count(10)
-            ->espanol()
+            ->argentino()
             ->create();
 
         // Создаем клиентов в разных городах
-        $ciudades = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao'];
+        $ciudades = ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata'];
         foreach ($ciudades as $ciudad) {
             Cliente::factory()
                 ->count(5)

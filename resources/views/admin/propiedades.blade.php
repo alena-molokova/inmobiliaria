@@ -74,22 +74,12 @@
                                         <td>{{ $propiedad->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.propiedades.show', $propiedad->property_id) }}" 
-                                                   class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.propiedades.edit', $propiedad->property_id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.propiedades.destroy', $propiedad->property_id) }}" 
-                                                      method="POST" class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta propiedad?')">
+                                                <a href="{{ route('admin.propiedades.show', $propiedad->property_id) }}" class="btn btn-sm btn-outline-info">Ver</a>
+                                                <a href="{{ route('admin.propiedades.edit', $propiedad->property_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                                <form action="{{ route('admin.propiedades.destroy', $propiedad->property_id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta propiedad?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                                 </form>
                                             </div>
                                         </td>

@@ -36,7 +36,7 @@
                             <div class="row text-center">
                                 <div class="col-6">
                                     <small class="text-muted d-block">Inicio</small>
-                                    <strong>{{ \Carbon\Carbon::parse($contrato->start_date)->format('d/m/Y') }}</strong>
+                                    <strong>{{ is_object($contrato->start_date) ? $contrato->start_date->format('d/m/Y') : $contrato->start_date }}</strong>
                                 </div>
                                 <div class="col-6">
                                     <small class="text-muted d-block">
@@ -47,11 +47,7 @@
                                         @endif
                                     </small>
                                     <strong>
-                                        @if($contrato->end_date)
-                                            {{ \Carbon\Carbon::parse($contrato->end_date)->format('d/m/Y') }}
-                                        @else
-                                            {{ \Carbon\Carbon::parse($contrato->start_date)->format('d/m/Y') }}
-                                        @endif
+                                        {{ is_object($contrato->end_date) ? $contrato->end_date->format('d/m/Y') : $contrato->end_date }}
                                     </strong>
                                 </div>
                             </div>

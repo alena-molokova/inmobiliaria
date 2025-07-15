@@ -22,8 +22,8 @@ class UserSeeder extends Seeder
             ['email' => 'admin@gmail.com'],
             [
                 'password' => Hash::make('admin123'),
-                'first_name' => 'Admin',
-                'last_name' => 'Principal',
+                'first_name' => 'Santiago',
+                'last_name' => 'González',
                 'phone' => '123456789',
                 'role_id' => $adminRole ? $adminRole->role_id : 3,
             ]
@@ -37,8 +37,8 @@ class UserSeeder extends Seeder
             ['email' => 'empleado@gmail.com'],
             [
                 'password' => Hash::make('empleado123'),
-                'first_name' => 'Empleado',
-                'last_name' => 'General',
+                'first_name' => 'Valentina',
+                'last_name' => 'Rodríguez',
                 'phone' => '987654321',
                 'role_id' => $empleadoRole ? $empleadoRole->role_id : 2,
             ]
@@ -52,8 +52,8 @@ class UserSeeder extends Seeder
             ['email' => 'usuario@gmail.com'],
             [
                 'password' => Hash::make('usuario123'),
-                'first_name' => 'Usuario',
-                'last_name' => 'Regular',
+                'first_name' => 'Mateo',
+                'last_name' => 'Martínez',
                 'phone' => '555555555',
                 'role_id' => $usuarioRole ? $usuarioRole->role_id : 1,
             ]
@@ -65,20 +65,26 @@ class UserSeeder extends Seeder
 
     private function createRoles()
     {
-        // Limpiar roles existentes para evitar conflictos
-        Role::truncate();
+        // Отключаем проверки внешних ключей
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Удаляем все роли
+        \App\Models\Role::query()->delete();
+        // Сбрасываем автоинкремент
+        \DB::statement('ALTER TABLE roles AUTO_INCREMENT = 1;');
+        // Включаем проверки внешних ключей
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         $roles = [
-            ['role_name' => 'Usuario'],
-            ['role_name' => 'Empleado'],
-            ['role_name' => 'Administrador'],
+            ['role_id' => 1, 'role_name' => 'Usuario'],
+            ['role_id' => 2, 'role_name' => 'Empleado'],
+            ['role_id' => 3, 'role_name' => 'Administrador'],
         ];
 
         foreach ($roles as $role) {
-            Role::create($role);
+            \App\Models\Role::create($role);
         }
         
-        echo "✅ Roles creados: " . Role::count() . "\n";
+        echo "✅ Roles creados: " . \App\Models\Role::count() . "\n";
     }
 
     private function createAdditionalUsers()

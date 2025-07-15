@@ -14,8 +14,8 @@ class ContratoFactory extends Factory
 
     public function definition()
     {
-        $tipos = ['Alquiler', 'Venta', 'Arrendamiento', 'Compra'];
-        $estados = ['Activo', 'Pendiente', 'Finalizado', 'Cancelado', 'En Revisión'];
+        $tipos = ['Alquiler', 'Venta'];
+        $estados = ['Activo', 'Inactivo'];
         
         return [
             'user_id' => User::inRandomOrder()->first()?->user_id,
@@ -23,7 +23,7 @@ class ContratoFactory extends Factory
             'property_id' => Propiedad::inRandomOrder()->first()?->property_id,
             'contract_type' => $this->faker->randomElement($tipos),
             'start_date' => now()->subDays(rand(0, 365)),
-            'end_date' => now()->addDays(rand(30, 1095)), // до 3 лет
+            'end_date' => now()->addDays(rand(30, 1095)),
             'amount' => $this->faker->numberBetween(50000, 500000),
             'status' => $this->faker->randomElement($estados),
         ];
@@ -72,13 +72,13 @@ class ContratoFactory extends Factory
     }
 
     /**
-     * Создает завершенный контракт
+     * Создает завершенный контракт (Inactivo)
      */
     public function finalizado()
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 'Finalizado',
+                'status' => 'Inactivo',
                 'start_date' => now()->subMonths(rand(6, 24)),
                 'end_date' => now()->subDays(rand(1, 30)),
             ];

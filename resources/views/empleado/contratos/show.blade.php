@@ -105,17 +105,17 @@
                             <table class="table table-borderless">
                                 <tr>
                                     <td><strong>Fecha de Inicio:</strong></td>
-                                    <td>{{ $contrato->start_date->format('d/m/Y') }}</td>
+                                    <td>{{ is_object($contrato->start_date) ? $contrato->start_date->format('d/m/Y') : $contrato->start_date }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Fecha de Fin:</strong></td>
-                                    <td>{{ $contrato->end_date ? $contrato->end_date->format('d/m/Y') : 'No especificada' }}</td>
+                                    <td>{{ is_object($contrato->end_date) ? $contrato->end_date->format('d/m/Y') : $contrato->end_date }}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Duración:</strong></td>
                                     <td>
                                         @if($contrato->end_date)
-                                            {{ $contrato->start_date->diffInDays($contrato->end_date) }} días
+                                            {{ (is_object($contrato->start_date) && is_object($contrato->end_date)) ? $contrato->start_date->diffInDays($contrato->end_date) : 'N/A' }} días
                                         @else
                                             Sin fecha de fin
                                         @endif

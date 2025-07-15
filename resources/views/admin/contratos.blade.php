@@ -63,25 +63,15 @@
                                                 <span class="text-muted">Sin asignar</span>
                                             @endif
                                         </td>
-                                        <td>{{ $contrato->start_date->format('d/m/Y') }}</td>
+                                        <td>{{ is_object($contrato->start_date) ? $contrato->start_date->format('d/m/Y') : $contrato->start_date }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.contratos.show', $contrato->contract_id) }}" 
-                                                   class="btn btn-sm btn-outline-info">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.contratos.edit', $contrato->contract_id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.contratos.destroy', $contrato->contract_id) }}" 
-                                                      method="POST" class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar este contrato?')">
+                                                <a href="{{ route('admin.contratos.show', $contrato->contract_id) }}" class="btn btn-sm btn-outline-info">Ver</a>
+                                                <a href="{{ route('admin.contratos.edit', $contrato->contract_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                                <form action="{{ route('admin.contratos.destroy', $contrato->contract_id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este contrato?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                                 </form>
                                             </div>
                                         </td>

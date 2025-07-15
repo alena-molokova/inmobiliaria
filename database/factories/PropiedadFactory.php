@@ -12,12 +12,13 @@ class PropiedadFactory extends Factory
 
     public function definition()
     {
-        $tipos = ['Casa', 'Apartamento', 'Terreno', 'Comercial', 'Dúplex', 'Casa de Campo', 'Oficina'];
-        $estados = ['Disponible', 'Vendida', 'Alquilada', 'En Negociación', 'Reservada'];
-        $ciudades = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza', 'Málaga', 'Bilbao', 'Alicante', 'Córdoba', 'Valladolid'];
+        $tipos = ['Casa', 'Apartamento', 'Terreno', 'Comercial', 'Dúplex'];
+        $estados = ['Disponible', 'Vendido', 'Alquilado', 'Pendiente'];
+        $ciudades = ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata', 'San Miguel de Tucumán', 'Mar del Plata', 'Salta', 'Santa Fe', 'San Juan'];
+        $calles = ['Av. Corrientes', 'Av. 9 de Julio', 'Av. Santa Fe', 'Av. Córdoba', 'Av. Belgrano', 'Av. San Martín', 'Av. Rivadavia', 'Av. Callao', 'Av. Pueyrredón', 'Av. Las Heras'];
         
         return [
-            'address' => $this->faker->streetAddress,
+            'address' => $this->faker->randomElement($calles) . ' ' . $this->faker->numberBetween(100, 9999),
             'city' => $this->faker->randomElement($ciudades),
             'property_type' => $this->faker->randomElement($tipos),
             'price' => $this->faker->numberBetween(50000, 2000000),

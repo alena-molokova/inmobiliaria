@@ -95,7 +95,7 @@
                                                         {{ $contrato->status }}
                                                     </span>
                                                 </td>
-                                                <td>{{ $contrato->start_date->format('d/m/Y') }}</td>
+                                                <td>{{ is_object($contrato->start_date) ? $contrato->start_date->format('d/m/Y') : $contrato->start_date }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <h2>Editar Contrato</h2>
 
-    <form method="POST" action="{{ route('empleado.updateContrato', $contrato->id) }}">
+    <form method="POST" action="{{ route('empleado.contratos.update', $contrato->contract_id) }}">
         @csrf
         @method('PUT')
 
@@ -42,7 +42,7 @@
 
         <div class="mb-3">
             <label>Fecha Inicio</label>
-            <input type="date" name="start_date" class="form-control" value="{{ $contrato->start_date }}" required>
+            <input type="date" name="start_date" class="form-control" value="{{ old('start_date', is_object($contrato->start_date) ? $contrato->start_date->format('Y-m-d') : $contrato->start_date) }}" required>
             @error('start_date')
                 <small class="text-danger">{{ $message }}</small>
             @enderror
@@ -50,14 +50,14 @@
 
         <div class="mb-3">
             <label>Fecha Fin</label>
-            <input type="date" name="end_date" class="form-control" value="{{ $contrato->end_date }}" required>
+            <input type="date" name="end_date" class="form-control" value="{{ old('end_date', is_object($contrato->end_date) ? $contrato->end_date->format('Y-m-d') : $contrato->end_date) }}" required>
             @error('end_date')
                 <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>
 
         <button class="btn btn-primary">Actualizar</button>
-        <a href="{{ route('empleado.contratos') }}" class="btn btn-secondary">Volver</a>
+        <a href="{{ route('empleado.contratos.index') }}" class="btn btn-secondary">Volver</a>
     </form>
 </div>
 @endsection

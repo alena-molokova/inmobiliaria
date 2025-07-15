@@ -29,23 +29,23 @@ class DemoDataSeeder extends Seeder
             [
                 'email' => 'demo.admin@inmobiliaria.com',
                 'password' => 'demo123',
-                'first_name' => 'Carlos',
-                'last_name' => 'García',
+                'first_name' => 'Santiago',
+                'last_name' => 'González',
                 'phone' => '600123456',
                 'role' => 'Administrador'
             ],
             [
                 'email' => 'demo.empleado@inmobiliaria.com',
                 'password' => 'demo123',
-                'first_name' => 'María',
-                'last_name' => 'López',
+                'first_name' => 'Valentina',
+                'last_name' => 'Rodríguez',
                 'phone' => '600654321',
                 'role' => 'Empleado'
             ],
             [
                 'email' => 'demo.usuario@inmobiliaria.com',
                 'password' => 'demo123',
-                'first_name' => 'Juan',
+                'first_name' => 'Mateo',
                 'last_name' => 'Martínez',
                 'phone' => '600987654',
                 'role' => 'Usuario'
@@ -54,7 +54,12 @@ class DemoDataSeeder extends Seeder
 
         foreach ($demoUsers as $userData) {
             $role = Role::where('role_name', $userData['role'])->first();
-            
+            $roleId = match ($userData['role']) {
+                'Usuario' => 1,
+                'Empleado' => 2,
+                'Administrador' => 3,
+                default => 1
+            };
             User::firstOrCreate(
                 ['email' => $userData['email']],
                 [
@@ -62,7 +67,7 @@ class DemoDataSeeder extends Seeder
                     'first_name' => $userData['first_name'],
                     'last_name' => $userData['last_name'],
                     'phone' => $userData['phone'],
-                    'role_id' => $role ? $role->role_id : 1
+                    'role_id' => $role ? $role->role_id : $roleId
                 ]
             );
         }
@@ -73,25 +78,25 @@ class DemoDataSeeder extends Seeder
         // Создаем демонстрационных клиентов
         $demoClients = [
             [
-                'first_name' => 'Ana',
-                'last_name' => 'Rodríguez',
-                'email' => 'ana.rodriguez@email.com',
-                'phone' => '600111222',
-                'address' => 'Calle Mayor 123, Madrid'
-            ],
-            [
-                'first_name' => 'Luis',
+                'first_name' => 'Sofía',
                 'last_name' => 'Fernández',
-                'email' => 'luis.fernandez@email.com',
-                'phone' => '600333444',
-                'address' => 'Avenida Diagonal 456, Barcelona'
+                'email' => 'sofia.fernandez@email.com',
+                'phone' => '600111222',
+                'address' => 'Av. Corrientes 1234, Buenos Aires, Argentina'
             ],
             [
-                'first_name' => 'Carmen',
-                'last_name' => 'González',
-                'email' => 'carmen.gonzalez@email.com',
+                'first_name' => 'Benjamín',
+                'last_name' => 'Gómez',
+                'email' => 'benjamin.gomez@email.com',
+                'phone' => '600333444',
+                'address' => 'Av. 9 de Julio 567, Córdoba, Argentina'
+            ],
+            [
+                'first_name' => 'Camila',
+                'last_name' => 'López',
+                'email' => 'camila.lopez@email.com',
                 'phone' => '600555666',
-                'address' => 'Plaza España 789, Sevilla'
+                'address' => 'Av. Santa Fe 890, Rosario, Argentina'
             ]
         ];
 
@@ -117,17 +122,17 @@ class DemoDataSeeder extends Seeder
         // Создаем демонстрационные объекты недвижимости
         $demoProperties = [
             [
-                'address' => 'Calle Gran Vía 1',
-                'city' => 'Madrid',
+                'address' => 'Av. Corrientes 1234',
+                'city' => 'Buenos Aires',
                 'property_type' => 'Apartamento',
                 'price' => 250000,
-                'description' => 'Hermoso apartamento en el centro de Madrid, 2 habitaciones, 1 baño, cocina equipada.',
+                'description' => 'Hermoso apartamento en el centro de Buenos Aires, 2 habitaciones, 1 baño, cocina equipada.',
                 'status' => 'Disponible',
                 'employee_id' => $empleados->random()
             ],
             [
-                'address' => 'Avenida Diagonal 100',
-                'city' => 'Barcelona',
+                'address' => 'Av. 9 de Julio 567',
+                'city' => 'Córdoba',
                 'property_type' => 'Casa',
                 'price' => 450000,
                 'description' => 'Casa familiar con jardín, 3 habitaciones, 2 baños, garaje incluido.',
@@ -135,12 +140,12 @@ class DemoDataSeeder extends Seeder
                 'employee_id' => $empleados->random()
             ],
             [
-                'address' => 'Plaza Mayor 50',
-                'city' => 'Valencia',
+                'address' => 'Av. Santa Fe 890',
+                'city' => 'Rosario',
                 'property_type' => 'Comercial',
                 'price' => 180000,
                 'description' => 'Local comercial en excelente ubicación, ideal para negocio.',
-                'status' => 'En Negociación',
+                'status' => 'Pendiente',
                 'employee_id' => $empleados->random()
             ]
         ];
@@ -187,7 +192,7 @@ class DemoDataSeeder extends Seeder
                 'start_date' => now()->subDays(15),
                 'end_date' => now()->addDays(45),
                 'amount' => 280000,
-                'status' => 'En Revisión'
+                'status' => 'Inactivo'
             ]
         ];
 

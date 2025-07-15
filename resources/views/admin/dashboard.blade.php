@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Usuarios</h5>
                     <p class="card-text">Gestiona los usuarios registrados.</p>
-                    <a href="{{ route('admin.usuarios') }}" class="btn btn-danger">Gestionar Usuarios</a>
+                    <a href="{{ route('admin.usuarios.index') }}" class="btn btn-danger">Gestionar Usuarios</a>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Empleados</h5>
                     <p class="card-text">Gestiona los empleados.</p>
-                    <a href="{{ route('admin.empleados') }}" class="btn btn-danger">Gestionar Empleados</a>
+                    <a href="{{ route('admin.empleados.index') }}" class="btn btn-danger">Gestionar Empleados</a>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Propiedades</h5>
                     <p class="card-text">Gestiona propiedades (CRUD).</p>
-                    <a href="{{ route('admin.propiedades') }}" class="btn btn-danger">Gestionar Propiedades</a>
+                    <a href="{{ route('admin.propiedades.index') }}" class="btn btn-danger">Gestionar Propiedades</a>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Clientes</h5>
                     <p class="card-text">Gestiona tus clientes.</p>
-                    <a href="{{ route('admin.clientes') }}" class="btn btn-danger">Gestionar Clientes</a>
+                    <a href="{{ route('admin.clientes.index') }}" class="btn btn-danger">Gestionar Clientes</a>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Contratos</h5>
                     <p class="card-text">Gestiona contratos de venta o alquiler.</p>
-                    <a href="{{ route('admin.contratos') }}" class="btn btn-danger">Gestionar Contratos</a>
+                    <a href="{{ route('admin.contratos.index') }}" class="btn btn-danger">Gestionar Contratos</a>
                 </div>
             </div>
         </div>

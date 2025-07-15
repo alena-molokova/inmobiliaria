@@ -46,19 +46,7 @@
                                         <td>{{ $usuario->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('empleado.usuarios.edit', $usuario->user_id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('empleado.usuarios.destroy', $usuario->user_id) }}" 
-                                                      method="POST" class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar este usuario?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <a href="{{ route('empleado.usuarios.edit', $usuario->user_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
                                             </div>
                                         </td>
                                     </tr>

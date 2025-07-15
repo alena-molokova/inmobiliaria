@@ -22,11 +22,11 @@
                     <td>{{ $usuario->role->role_name }}</td>
                     <td>{{ $usuario->email }}</td>
                     <td>
-                        <a href="{{ route('admin.usuarios.edit', $usuario->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                        <form action="{{ route('admin.usuarios.destroy', $usuario->id) }}" method="POST" class="d-inline">
+                        <a href="{{ route('admin.usuarios.edit', $usuario->user_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <form action="{{ route('admin.usuarios.destroy', $usuario->user_id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este usuario?')">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar este usuario?')">Eliminar</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                         </form>
                     </td>
                 </tr>

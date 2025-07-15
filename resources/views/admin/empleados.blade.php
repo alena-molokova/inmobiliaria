@@ -50,19 +50,13 @@
                                         <td>{{ $empleado->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.empleados.edit', $empleado->user_id) }}" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('admin.empleados.destroy', $empleado->user_id) }}" 
-                                                      method="POST" class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">
-                            @csrf
-                            @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                        </form>
+                                                <a href="{{ route('admin.empleados.show', $empleado->user_id) }}" class="btn btn-sm btn-outline-info">Ver</a>
+                                                <a href="{{ route('admin.empleados.edit', $empleado->user_id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                                                <form action="{{ route('admin.empleados.destroy', $empleado->user_id) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
