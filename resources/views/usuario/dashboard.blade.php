@@ -6,9 +6,6 @@
 <main class="flex-grow-1">
 <div class="container mt-5">
   <h2 class="mb-4">Bienvenido, {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h2>
-  <p>Estas son algunas propiedades que podrían interesarte:</p>
-
-  <h3 class="mb-4">Otras opciones</h3>
 
   <div class="row g-4">
     <div class="col-md-4">
