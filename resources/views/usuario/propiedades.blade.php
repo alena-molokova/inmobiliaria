@@ -100,9 +100,9 @@
                         </div>
                         
                         <div class="card-footer bg-transparent">
-                            <button class="btn btn-outline-primary btn-sm w-100" disabled>
+                            <a href="{{ route('usuario.propiedades.show', $propiedad->property_id) }}" class="btn btn-outline-primary btn-sm w-100">
                                 Ver detalles
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

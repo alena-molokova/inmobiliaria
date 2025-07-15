@@ -115,7 +115,7 @@
                                     <td><strong>Duración:</strong></td>
                                     <td>
                                         @if($contrato->end_date)
-                                            {{ (is_object($contrato->start_date) && is_object($contrato->end_date)) ? $contrato->start_date->diffInDays($contrato->end_date) : 'N/A' }} días
+                                            {{ (is_object($contrato->start_date) && is_object($contrato->end_date)) ? (int) $contrato->start_date->diffInDays($contrato->end_date) : 'N/A' }} días
                                         @else
                                             Sin fecha de fin
                                         @endif
@@ -123,7 +123,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Fecha Creación:</strong></td>
-                                    <td>{{ $contrato->created_at->format('d/m/Y H:i') }}</td>
+                                    <td>{{ is_object($contrato->created_at) ? $contrato->created_at->format('d/m/Y H:i') : $contrato->created_at }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -144,7 +144,7 @@
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
                             <strong>Nota:</strong> Este contrato fue creado por el empleado 
-                            <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong> el {{ $contrato->created_at->format('d/m/Y a las H:i') }}.
+                            <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong> el {{ is_object($contrato->created_at) ? $contrato->created_at->format('d/m/Y a las H:i') : $contrato->created_at }}.
                         </div>
                     </div>
                 </div>

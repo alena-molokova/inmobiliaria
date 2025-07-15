@@ -54,7 +54,7 @@
                             
                             @if($contrato->contract_type == 'Alquiler' && $contrato->end_date)
                                 @php
-                                    $diasRestantes = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($contrato->end_date), false);
+                                    $diasRestantes = (int) \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($contrato->end_date), false);
                                 @endphp
                                 
                                 @if($diasRestantes > 0)

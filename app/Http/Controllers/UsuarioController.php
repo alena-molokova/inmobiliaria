@@ -45,4 +45,13 @@ class UsuarioController extends Controller
 
         return view('usuario.propiedades', compact('propiedades', 'cities', 'propertyTypes'));
     }
+
+    public function showPropiedad($id)
+    {
+        $propiedad = Propiedad::with(['empleado', 'contratos.cliente'])
+            ->where('status', 'Disponible')
+            ->findOrFail($id);
+        
+        return view('usuario.propiedades.show', compact('propiedad'));
+    }
 }

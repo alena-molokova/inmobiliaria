@@ -100,7 +100,7 @@
                                        class="form-control @error('start_date') is-invalid @enderror" 
                                        id="start_date" 
                                        name="start_date" 
-                                       value="{{ old('start_date', $contrato->start_date->format('Y-m-d')) }}" 
+                                       value="{{ old('start_date', is_object($contrato->start_date) ? $contrato->start_date->format('Y-m-d') : $contrato->start_date) }}" 
                                        required>
                                 @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -113,7 +113,7 @@
                                        class="form-control @error('end_date') is-invalid @enderror" 
                                        id="end_date" 
                                        name="end_date" 
-                                       value="{{ old('end_date', $contrato->end_date ? $contrato->end_date->format('Y-m-d') : '') }}">
+                                       value="{{ old('end_date', $contrato->end_date ? (is_object($contrato->end_date) ? $contrato->end_date->format('Y-m-d') : $contrato->end_date) : '') }}">
                                 @error('end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

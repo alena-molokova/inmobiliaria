@@ -117,6 +117,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::middleware(['role:Usuario,Empleado,Administrador'])->prefix('usuario')->name('usuario.')->group(function () {
         Route::get('/dashboard', [UsuarioController::class, 'dashboard'])->name('dashboard');
         Route::get('/propiedades', [UsuarioController::class, 'propiedades'])->name('propiedades');
+        Route::get('/propiedades/{id}', [UsuarioController::class, 'showPropiedad'])->name('propiedades.show');
         Route::get('/contratos', [UsuarioController::class, 'contratos'])->name('contratos');
     });
 });
