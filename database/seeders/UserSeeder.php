@@ -11,10 +11,8 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Создаем основные роли, если их нет
         $this->createRoles();
 
-        // Создаем администраторов
         $adminRole = Role::where('role_name', 'Administrador')->first();
         echo "🔍 Role Administrador ID: " . ($adminRole ? $adminRole->role_id : 'NO ENCONTRADO') . "\n";
         
@@ -29,7 +27,6 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Создаем сотрудника
         $empleadoRole = Role::where('role_name', 'Empleado')->first();
         echo "🔍 Role Empleado ID: " . ($empleadoRole ? $empleadoRole->role_id : 'NO ENCONTRADO') . "\n";
         
@@ -44,7 +41,6 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Создаем обычного пользователя
         $usuarioRole = Role::where('role_name', 'Usuario')->first();
         echo "🔍 Role Usuario ID: " . ($usuarioRole ? $usuarioRole->role_id : 'NO ENCONTRADO') . "\n";
         
@@ -59,19 +55,14 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Создаем дополнительные пользователи с помощью фабрик
         $this->createAdditionalUsers();
     }
 
     private function createRoles()
     {
-        // Отключаем проверки внешних ключей
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // Удаляем все роли
         \App\Models\Role::query()->delete();
-        // Сбрасываем автоинкремент
         \DB::statement('ALTER TABLE roles AUTO_INCREMENT = 1;');
-        // Включаем проверки внешних ключей
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         $roles = [
@@ -89,19 +80,16 @@ class UserSeeder extends Seeder
 
     private function createAdditionalUsers()
     {
-        // Создаем 5 дополнительных администраторов
         User::factory()
             ->count(5)
             ->admin()
             ->create();
 
-        // Создаем 10 сотрудников
         User::factory()
             ->count(10)
             ->empleado()
             ->create();
 
-        // Создаем 20 обычных пользователей
         User::factory()
             ->count(20)
             ->usuario()

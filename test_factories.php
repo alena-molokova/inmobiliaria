@@ -1,15 +1,7 @@
 <?php
 
-/**
- * Test Script para Factories y Seeders
- * 
- * Este script demuestra cómo usar las factories para crear datos de prueba
- * sin ejecutar los seeders completos.
- */
-
 require_once 'vendor/autoload.php';
 
-// Bootstrap Laravel
 $app = require_once 'bootstrap/app.php';
 $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
@@ -23,7 +15,6 @@ echo "🏠 Test de Factories - Sistema de Inmobiliaria\n";
 echo "==============================================\n\n";
 
 try {
-    // Verificar que existan roles
     $roles = Role::all();
     if ($roles->isEmpty()) {
         echo "❌ No se encontraron roles. Ejecuta las migraciones primero.\n";
@@ -32,7 +23,6 @@ try {
     
     echo "✅ Roles encontrados: " . $roles->count() . "\n";
     
-    // Test UserFactory
     echo "\n👥 Probando UserFactory...\n";
     $user = User::factory()->create();
     echo "   - Usuario creado: {$user->first_name} {$user->last_name} ({$user->email})\n";
@@ -43,7 +33,6 @@ try {
     $empleado = User::factory()->empleado()->create();
     echo "   - Empleado creado: {$empleado->first_name} {$empleado->last_name}\n";
     
-    // Test ClienteFactory
     echo "\n👤 Probando ClienteFactory...\n";
     $cliente = Cliente::factory()->create();
     echo "   - Cliente creado: {$cliente->first_name} {$cliente->last_name}\n";
@@ -54,7 +43,6 @@ try {
     $clienteMadrid = Cliente::factory()->enCiudad('Madrid')->create();
     echo "   - Cliente en Madrid: {$clienteMadrid->address}\n";
     
-    // Test PropiedadFactory
     echo "\n🏘️ Probando PropiedadFactory...\n";
     $propiedad = Propiedad::factory()->create();
     echo "   - Propiedad creada: {$propiedad->property_type} en {$propiedad->city}\n";
@@ -68,7 +56,6 @@ try {
     $comercial = Propiedad::factory()->comercial()->create();
     echo "   - Local comercial creado: €" . number_format($comercial->price, 0, ',', '.') . "\n";
     
-    // Test ContratoFactory
     echo "\n📄 Probando ContratoFactory...\n";
     $contrato = Contrato::factory()->create();
     echo "   - Contrato creado: {$contrato->contract_type} - €" . number_format($contrato->amount, 0, ',', '.') . "\n";
@@ -79,7 +66,6 @@ try {
     $venta = Contrato::factory()->venta()->create();
     echo "   - Venta creada: €" . number_format($venta->amount, 0, ',', '.') . "\n";
     
-    // Estadísticas finales
     echo "\n📊 Estadísticas de datos creados:\n";
     echo "   - Usuarios: " . User::count() . "\n";
     echo "   - Clientes: " . Cliente::count() . "\n";

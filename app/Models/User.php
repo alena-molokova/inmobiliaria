@@ -69,6 +69,16 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
 
+    public function propiedades()
+    {
+        return $this->hasMany(Propiedad::class, 'employee_id', 'user_id');
+    }
+
+    public function contratos()
+    {
+        return $this->hasMany(Contrato::class, 'user_id', 'user_id');
+    }
+
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

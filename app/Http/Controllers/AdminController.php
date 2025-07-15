@@ -108,13 +108,201 @@ class AdminController extends Controller
         return redirect()->route('admin.empleados.index')->with('success', 'Empleado eliminado correctamente.');
     }
 
-    public function reportes()
+    public function reportes(Request $request)
     {
-        return view('admin.reportes', [
+        $fechaInicio = $request->get('fecha_inicio');
+        $fechaFin = $request->get('fecha_fin');
+        $tipoContrato = $request->get('tipo_contrato');
+        $ciudad = $request->get('ciudad');
+        $status = $request->get('status');
+
+        $queryContratos = Contrato::with(['propiedad', 'cliente', 'usuario']);
+        $queryPropiedades = Propiedad::with('empleado');
+        $queryClientes = \App\Models\Cliente::withCount('contratos');
+
+        if ($fechaInicio) {
+            $queryContratos->where('start_date', '>=', $fechaInicio);
+        }
+        if ($fechaFin) {
+            $queryContratos->where('end_date', '<=', $fechaFin);
+        }
+        if ($tipoContrato) {
+            $queryContratos->where('contract_type', $tipoContrato);
+        }
+        if ($ciudad) {
+            $queryContratos->whereHas('propiedad', function($q) use ($ciudad) {
+                $q->where('city', $ciudad);
+            });
+            $queryPropiedades->where('city', $ciudad);
+        }
+        if ($status) {
+            $queryPropiedades->where('status', $status);
+        }
+
+        $contratos = $queryContratos->get();
+        $propiedades = $queryPropiedades->get();
+        $clientes = $queryClientes->get();
+
+        $stats = [
             'totalUsuarios' => User::whereHas('role', fn($q) => $q->where('role_name', 'Usuario'))->count(),
             'totalEmpleados' => User::whereHas('role', fn($q) => $q->where('role_name', 'Empleado'))->count(),
             'totalAdmins' => User::whereHas('role', fn($q) => $q->where('role_name', 'Administrador'))->count(),
-        ]);
+            'totalContratos' => $contratos->count(),
+            'totalPropiedades' => $propiedades->count(),
+            'totalClientes' => $clientes->count(),
+            'contratosAlquiler' => $contratos->where('contract_type', 'Alquiler')->count(),
+            'contratosVenta' => $contratos->where('contract_type', 'Venta')->count(),
+            'propiedadesDisponibles' => $propiedades->where('status', 'Disponible')->count(),
+            'propiedadesVendidas' => $propiedades->where('status', 'Vendido')->count(),
+            'propiedadesAlquiladas' => $propiedades->where('status', 'Alquilado')->count(),
+        ];
+
+        if ($contratos->count() > 0) {
+            $stats['promedioContratos'] = $contratos->avg('amount');
+        }
+        if ($propiedades->count() > 0) {
+            $stats['promedioPrecios'] = $propiedades->avg('price');
+        }
+
+        $statsPorCiudad = $propiedades->groupBy('city')->map(function($props) {
+            return [
+                'cantidad' => $props->count(),
+                'promedio_precio' => $props->avg('price'),
+                'disponibles' => $props->where('status', 'Disponible')->count(),
+            ];
+        });
+
+        $actividadEmpleados = User::whereHas('role', fn($q) => $q->where('role_name', 'Empleado'))
+            ->withCount(['propiedades', 'contratos'])
+            ->get()
+            ->map(function($empleado) {
+                return [
+                    'nombre' => $empleado->first_name . ' ' . $empleado->last_name,
+                    'propiedades_asignadas' => $empleado->propiedades_count,
+                    'contratos_creados' => $empleado->contratos_count,
+                ];
+            });
+
+        $ciudades = Propiedad::distinct()->pluck('city')->sort();
+        $tiposContrato = ['Alquiler', 'Venta'];
+        $statuses = ['Disponible', 'Vendido', 'Alquilado', 'Pendiente'];
+
+        return view('admin.reportes', compact(
+            'stats', 
+            'contratos', 
+            'propiedades', 
+            'clientes',
+            'statsPorCiudad',
+            'actividadEmpleados',
+            'ciudades',
+            'tiposContrato',
+            'statuses',
+            'fechaInicio',
+            'fechaFin',
+            'tipoContrato',
+            'ciudad',
+            'status'
+        ));
+    }
+
+    public function exportarReportes(Request $request)
+    {
+        $fechaInicio = $request->get('fecha_inicio');
+        $fechaFin = $request->get('fecha_fin');
+        $tipoContrato = $request->get('tipo_contrato');
+        $ciudad = $request->get('ciudad');
+        $status = $request->get('status');
+
+        $queryContratos = Contrato::with(['propiedad', 'cliente', 'usuario']);
+        $queryPropiedades = Propiedad::with('empleado');
+        $queryClientes = \App\Models\Cliente::withCount('contratos');
+
+        if ($fechaInicio) {
+            $queryContratos->where('start_date', '>=', $fechaInicio);
+        }
+        if ($fechaFin) {
+            $queryContratos->where('end_date', '<=', $fechaFin);
+        }
+        if ($tipoContrato) {
+            $queryContratos->where('contract_type', $tipoContrato);
+        }
+        if ($ciudad) {
+            $queryContratos->whereHas('propiedad', function($q) use ($ciudad) {
+                $q->where('city', $ciudad);
+            });
+            $queryPropiedades->where('city', $ciudad);
+        }
+        if ($status) {
+            $queryPropiedades->where('status', $status);
+        }
+
+        $contratos = $queryContratos->get();
+        $propiedades = $queryPropiedades->get();
+        $clientes = $queryClientes->get();
+
+        $filename = 'reportes_' . date('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($contratos, $propiedades, $clientes) {
+            $file = fopen('php://output', 'w');
+            
+            fputcsv($file, ['=== CONTRATOS ===']);
+            fputcsv($file, ['ID', 'Tipo', 'Monto', 'Cliente', 'Propiedad', 'Ciudad', 'Fecha Inicio', 'Fecha Fin', 'Estado']);
+            
+            foreach ($contratos as $contrato) {
+                fputcsv($file, [
+                    $contrato->contract_id,
+                    $contrato->contract_type,
+                    $contrato->amount,
+                    $contrato->cliente->nombre_completo ?? 'N/A',
+                    $contrato->propiedad->address ?? 'N/A',
+                    $contrato->propiedad->city ?? 'N/A',
+                    is_object($contrato->start_date) ? $contrato->start_date->format('Y-m-d') : $contrato->start_date,
+                    is_object($contrato->end_date) ? $contrato->end_date->format('Y-m-d') : $contrato->end_date,
+                    $contrato->status
+                ]);
+            }
+            
+            fputcsv($file, []);
+            
+            fputcsv($file, ['=== PROPIEDADES ===']);
+            fputcsv($file, ['ID', 'Tipo', 'Dirección', 'Ciudad', 'Precio', 'Estado', 'Empleado']);
+            
+            foreach ($propiedades as $propiedad) {
+                fputcsv($file, [
+                    $propiedad->property_id,
+                    $propiedad->property_type,
+                    $propiedad->address,
+                    $propiedad->city,
+                    $propiedad->price,
+                    $propiedad->status,
+                    $propiedad->empleado ? $propiedad->empleado->first_name . ' ' . $propiedad->empleado->last_name : 'N/A'
+                ]);
+            }
+            
+            fputcsv($file, []);
+            
+            fputcsv($file, ['=== CLIENTES ===']);
+            fputcsv($file, ['ID', 'Nombre', 'Email', 'Teléfono', 'Dirección', 'Contratos']);
+            
+            foreach ($clientes as $cliente) {
+                fputcsv($file, [
+                    $cliente->cliente_id,
+                    $cliente->nombre_completo,
+                    $cliente->email,
+                    $cliente->phone ?? 'N/A',
+                    $cliente->address ?? 'N/A',
+                    $cliente->contratos_count
+                ]);
+            }
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function propiedades()

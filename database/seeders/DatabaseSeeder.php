@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
             ClienteSeeder::class,
             PropiedadSeeder::class,
             ContratoSeeder::class,
-            DemoDataSeeder::class, // Добавляем демонстрационные данные
+            DemoDataSeeder::class,
         ]);
 
         echo "\n✅ Todos los seeders se ejecutaron exitosamente.\n";

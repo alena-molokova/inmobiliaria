@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Comprobar si la tabla ya existe para evitar conflictos
         if (!Schema::hasTable('cache_locks')) {
             Schema::create('cache_locks', function (Blueprint $table) {
                 $table->string('key')->primary();
@@ -26,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Eliminar la tabla si existe
         Schema::dropIfExists('cache_locks');
     }
 };

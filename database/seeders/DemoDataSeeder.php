@@ -24,7 +24,6 @@ class DemoDataSeeder extends Seeder
 
     private function createDemoUsers()
     {
-        // Создаем демонстрационных пользователей
         $demoUsers = [
             [
                 'email' => 'demo.admin@inmobiliaria.com',
@@ -75,7 +74,6 @@ class DemoDataSeeder extends Seeder
 
     private function createDemoClients()
     {
-        // Создаем демонстрационных клиентов
         $demoClients = [
             [
                 'first_name' => 'Sofía',
@@ -119,7 +117,6 @@ class DemoDataSeeder extends Seeder
             return;
         }
 
-        // Создаем демонстрационные объекты недвижимости
         $demoProperties = [
             [
                 'address' => 'Av. Corrientes 1234',
@@ -172,7 +169,6 @@ class DemoDataSeeder extends Seeder
             return;
         }
 
-        // Создаем демонстрационные контракты
         $demoContracts = [
             [
                 'user_id' => $usuarios->random(),

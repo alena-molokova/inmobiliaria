@@ -19,7 +19,6 @@ class PropiedadSeeder extends Seeder
             return;
         }
 
-        // Создаем 25 обычных объектов недвижимости
         Propiedad::factory()
             ->count(25)
             ->state(function () use ($empleados) {
@@ -29,7 +28,6 @@ class PropiedadSeeder extends Seeder
             })
             ->create();
 
-        // Создаем 10 домов
         Propiedad::factory()
             ->count(10)
             ->casa()
@@ -40,7 +38,6 @@ class PropiedadSeeder extends Seeder
             })
             ->create();
 
-        // Создаем 15 квартир
         Propiedad::factory()
             ->count(15)
             ->apartamento()
@@ -51,7 +48,6 @@ class PropiedadSeeder extends Seeder
             })
             ->create();
 
-        // Создаем 8 коммерческих объектов
         Propiedad::factory()
             ->count(8)
             ->comercial()
@@ -62,7 +58,6 @@ class PropiedadSeeder extends Seeder
             })
             ->create();
 
-        // Создаем недвижимость в разных городах
         $ciudades = ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata', 'Mar del Plata'];
         foreach ($ciudades as $ciudad) {
             Propiedad::factory()
@@ -76,7 +71,6 @@ class PropiedadSeeder extends Seeder
                 ->create();
         }
 
-        // Создаем 20 доступных объектов
         Propiedad::factory()
             ->count(20)
             ->disponible()
